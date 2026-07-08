@@ -1,0 +1,55 @@
+import { Circle, Layers, Leaf, Lamp, UtensilsCrossed, Smartphone } from "lucide-react";
+
+export const TAG_LABELS = {
+  ceramic: "Ceramic",
+  warm: "Warm tones",
+  cool: "Cool tones",
+  minimal: "Minimalist",
+  maximalist: "Maximalist",
+  handmade: "Handmade",
+  statement: "Statement pieces",
+  natural: "Natural materials",
+  textile: "Textiles",
+  plant: "Plants",
+  lowMaintenance: "Low-maintenance",
+  everyday: "Everyday basics",
+  brass: "Brass details",
+  wood: "Wood",
+  tech: "Everyday tech",
+};
+
+export const CATEGORY_META = {
+  Ceramics: { icon: Circle, from: "#E4D8C3", to: "#C7AE86" },
+  Textiles: { icon: Layers, from: "#DCC7AC", to: "#AF8A63" },
+  Plants: { icon: Leaf, from: "#C3CDA9", to: "#8B9B72" },
+  Lighting: { icon: Lamp, from: "#EAD9A0", to: "#CBA754" },
+  Kitchen: { icon: UtensilsCrossed, from: "#CFC0A2", to: "#9E8B67" },
+  Electronics: { icon: Smartphone, from: "#C9CBC6", to: "#8D9089" },
+};
+
+export const PRODUCTS = [
+  { id: "p1", name: "Terra vase", category: "Ceramics", price: 58, image: "🏺", description: "Handcrafted ceramic vase with warm earth tones. Perfect for displaying dried flowers or as a standalone decorative piece. Hand-thrown and glazed for a unique finish.", tags: { ceramic: 1, warm: 0.8, minimal: 0.6, handmade: 0.7, statement: 0.5 } },
+  { id: "p2", name: "Ash bowl set", category: "Ceramics", price: 42, image: "🥣", description: "Minimalist ceramic bowls in cool ash tones. Set includes 3 bowls of varying sizes, perfect for everyday dining or food prep. Dishwasher safe and durable.", tags: { ceramic: 1, minimal: 0.9, everyday: 0.7, cool: 0.4 } },
+  { id: "p3", name: "Speckled mug pair", category: "Ceramics", price: 34, image: "☕", description: "Cozy handmade ceramic mugs with unique speckled glaze. Perfect for morning coffee or evening tea. Each mug holds 12oz and has a comfortable grip.", tags: { ceramic: 0.9, warm: 0.6, everyday: 0.9, handmade: 0.6 } },
+  { id: "p4", name: "Moon planter", category: "Ceramics", price: 46, image: "🌙", description: "Crescent moon-shaped planter crafted from eco-friendly ceramic. Ideal for succulents or small plants. Includes drainage hole at the bottom.", tags: { ceramic: 0.8, plant: 0.5, minimal: 0.7, natural: 0.6 } },
+  { id: "p5", name: "Woven throw", category: "Textiles", price: 89, image: "🧶", description: "Warm, soft woven throw blanket made from organic cotton and natural fibers. Perfect for adding coziness to your couch or bed. Machine washable.", tags: { textile: 1, warm: 0.9, natural: 0.8, maximalist: 0.4 } },
+  { id: "p6", name: "Linen cushion cover", category: "Textiles", price: 32, image: "🛋️", description: "Minimalist linen cushion cover in natural beige. Fits 18x18 inch pillows. Removable and washable for easy maintenance.", tags: { textile: 0.9, minimal: 0.8, everyday: 0.7, natural: 0.6 } },
+  { id: "p7", name: "Kantha quilt", category: "Textiles", price: 128, image: "🧵", description: "Handstitched Kantha quilt featuring intricate embroidery patterns. Made from recycled fabric scraps in warm colors. Each piece is unique and eco-friendly.", tags: { textile: 1, maximalist: 0.7, warm: 0.7, handmade: 0.9 } },
+  { id: "p8", name: "Jute runner", category: "Textiles", price: 54, image: "🏠", description: "Durable natural jute runner rug made from sustainable fibers. Perfect for entryways or hallways. Eco-friendly and adds rustic charm to any space.", tags: { textile: 0.8, natural: 0.9, everyday: 0.6, minimal: 0.5 } },
+  { id: "p9", name: "Fiddle leaf fig", category: "Plants", price: 65, image: "🌿", description: "Statement plant with large, beautiful violin-shaped leaves. Thrives in bright indirect light. Great for modern interiors. Includes care guide.", tags: { plant: 1, statement: 0.8, natural: 0.7, lowMaintenance: 0.2 } },
+  { id: "p10", name: "Snake plant", category: "Plants", price: 28, image: "🌱", description: "Ultra low-maintenance succulent that thrives in any light condition. NASA-approved air purifier. Perfect for beginners and offices. Drought-tolerant.", tags: { plant: 1, lowMaintenance: 0.95, minimal: 0.6, everyday: 0.7 } },
+  { id: "p11", name: "Trailing pothos", category: "Plants", price: 22, image: "🍃", description: "Easy-to-grow trailing plant with heart-shaped leaves. Perfect for hanging baskets or high shelves. Highly adaptable and forgiving plant for beginners.", tags: { plant: 1, lowMaintenance: 0.9, everyday: 0.8, natural: 0.6 } },
+  { id: "p12", name: "Dried pampas bundle", category: "Plants", price: 24, image: "🌾", description: "Beautiful dried pampas grass bundle for decorative arrangements. Adds bohemian charm to any room. Long-lasting and maintenance-free display piece.", tags: { plant: 0.6, natural: 0.9, maximalist: 0.5, warm: 0.5 } },
+  { id: "p13", name: "Brass arc lamp", category: "Lighting", price: 145, image: "💡", description: "Modern brass arc floor lamp with warm, dimmable LED bulbs. Elegant curved design spans 7 feet. Creates beautiful ambient lighting for living spaces.", tags: { brass: 1, warm: 0.9, statement: 0.8, minimal: 0.4 } },
+  { id: "p14", name: "Paper globe pendant", category: "Lighting", price: 68, image: "🏮", description: "Minimalist paper globe pendant light with natural fibers. Soft warm glow filters through the texture. Perfect for dining areas or bedroom reading nooks.", tags: { minimal: 0.9, natural: 0.6, warm: 0.5, everyday: 0.5 } },
+  { id: "p15", name: "Amber glass sconce", category: "Lighting", price: 76, image: "🕯️", description: "Wall-mounted amber glass sconce in brass finish. Casts warm golden light on walls. Vintage-inspired design for a cozy, luxurious feel.", tags: { warm: 1, brass: 0.5, statement: 0.6 } },
+  { id: "p16", name: "Cast iron skillet", category: "Kitchen", price: 52, image: "🍳", description: "Pre-seasoned cast iron skillet for versatile cooking. Retains heat excellently for perfect searing and baking. Lasts generations with proper care.", tags: { everyday: 0.9, natural: 0.5, warm: 0.4, handmade: 0.3 } },
+  { id: "p17", name: "Olivewood board set", category: "Kitchen", price: 44, image: "🍽️", description: "Beautiful handcrafted olivewood cutting boards set. Naturally antimicrobial wood. Set includes 2 boards in varying sizes for prep and serving.", tags: { wood: 1, natural: 0.9, warm: 0.6, handmade: 0.7 } },
+  { id: "p18", name: "Speckled stoneware plates", category: "Kitchen", price: 60, image: "🍲", description: "Artisan stoneware dinner plates with unique speckled glaze. Microwave and dishwasher safe. Set of 4 plates for everyday dining.", tags: { ceramic: 0.8, everyday: 0.9, minimal: 0.6, handmade: 0.5 } },
+  { id: "p19", name: "Fabric-wrapped smart speaker", category: "Electronics", price: 120, image: "🔊", description: "Modern smart speaker with premium fabric wrapping. 360-degree sound with deep bass. Voice control compatible and WiFi connected.", tags: { minimal: 0.6, warm: 0.5, statement: 0.4, everyday: 0.6, tech: 1 } },
+  { id: "p20", name: "Wireless earbuds", category: "Electronics", price: 89, image: "🎧", description: "Premium wireless earbuds with active noise cancellation. Up to 8 hours battery life per charge. Seamless Bluetooth connectivity with all devices.", tags: { minimal: 0.8, everyday: 0.8, cool: 0.3, tech: 1 } },
+  { id: "p21", name: "Vinyl turntable", category: "Electronics", price: 215, image: "📀", description: "Beautiful wooden turntable for vinyl enthusiasts. Built-in speakers with warm sound quality. Vintage aesthetic with modern technology.", tags: { warm: 0.7, statement: 0.9, wood: 0.5, maximalist: 0.4, tech: 1 } },
+  { id: "p22", name: "Instant film camera", category: "Electronics", price: 79, image: "📷", description: "Retro instant camera that prints photos immediately. Perfect for capturing memories at events. Includes film pack and user guide.", tags: { statement: 0.6, warm: 0.5, everyday: 0.4, tech: 1 } },
+  { id: "p23", name: "Wood wireless charging tray", category: "Electronics", price: 38, image: "🔌", description: "Natural wood charging tray with built-in wireless charging pad. Minimalist design keeps your desk organized. Compatible with all Qi-enabled devices.", tags: { wood: 0.8, minimal: 0.7, everyday: 0.8, natural: 0.5, tech: 1 } },
+  { id: "p24", name: "Smart desk clock", category: "Electronics", price: 54, image: "⏰", description: "Minimalist digital clock with temperature and humidity display. Touch-controlled brightness. Perfect for bedside table or workspace.", tags: { minimal: 0.9, everyday: 0.6, cool: 0.4, tech: 1 } },
+];
