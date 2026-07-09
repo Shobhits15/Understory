@@ -24,8 +24,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/auth/signup")
-    public ResponseEntity<?> signup(@RequestBody AuthRequest req) {
+    // DEPRECATED: Use AuthController endpoints instead (with OTP support)
+    @PostMapping("/legacy/auth/signup")
+    public ResponseEntity<?> signupLegacy(@RequestBody AuthRequest req) {
         if (isBlank(req.getUsername()) || isBlank(req.getPassword())) {
             return ResponseEntity.badRequest().body(Map.of("error", "Username and password are required."));
         }
@@ -37,8 +38,9 @@ public class UserController {
         }
     }
 
-    @PostMapping("/auth/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest req) {
+    // DEPRECATED: Use AuthController endpoints instead (with OTP support)
+    @PostMapping("/legacy/auth/login")
+    public ResponseEntity<?> loginLegacy(@RequestBody AuthRequest req) {
         if (isBlank(req.getUsername()) || isBlank(req.getPassword())) {
             return ResponseEntity.badRequest().body(Map.of("error", "Username and password are required."));
         }

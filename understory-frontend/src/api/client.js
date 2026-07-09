@@ -2,7 +2,40 @@
 // project). Override at build time with VITE_API_BASE in a .env file if you
 // deploy the backend somewhere other than localhost:8080, e.g.:
 //   VITE_API_BASE=https://api.yourdomain.com/api
-export const API_BASE = import.meta.env.VITE_API_BASE || "https://understory-production-cec9.up.railway.app/api";
+export const API_BASE = import.meta.env.VITE_API_BASE
+
+export async function apiRegister(username, email, password) {
+  const res = await fetch(`${API_BASE}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, email, password }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.data?.message || data.message || "Registration failed.");
+  return data.data;
+}
+
+export async function apiVerifyEmail(email, otp) {
+  const res = await fetch(`${API_BASE}/auth/verify-email`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.message || "OTP verification failed.");
+  return data;
+}
+
+export async function apiResendOtp(email) {
+  const res = await fetch(`${API_BASE}/auth/resend-otp`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.message || "Failed to resend OTP.");
+  return data;
+}
 
 export async function apiSignup(username, password) {
   const res = await fetch(`${API_BASE}/auth/signup`, {
@@ -14,6 +47,7 @@ export async function apiSignup(username, password) {
   if (!res.ok) throw new Error(data.error || "Signup failed.");
   return data;
 }
+
 
 export async function apiLogin(username, password) {
   const res = await fetch(`${API_BASE}/auth/login`, {

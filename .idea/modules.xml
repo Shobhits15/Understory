@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/understory.iml" filepath="$PROJECT_DIR$/.idea/understory.iml" />
+      <module fileurl="file://$PROJECT_DIR$/understory-backend/understory-backend.iml" filepath="$PROJECT_DIR$/understory-backend/understory-backend.iml" />
     </modules>
   </component>
 </project>

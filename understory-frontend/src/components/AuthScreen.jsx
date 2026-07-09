@@ -1,7 +1,7 @@
 import { COLORS } from "../constants/colors";
 import { GlobalStyle } from "./GlobalStyle";
 
-export function AuthScreen({ mode, setMode, username, setUsername, password, setPassword, error, busy, onLogin, onSignup, onGuest }) {
+export function AuthScreen({ mode, setMode, username, setUsername, email, setEmail, password, setPassword, error, busy, onLogin, onSignup, onGuest }) {
   const isLogin = mode === "login";
   return (
     <div style={{ background: COLORS.bg, minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem", fontFamily: "'Inter', sans-serif", color: COLORS.ink }}>
@@ -27,6 +27,7 @@ export function AuthScreen({ mode, setMode, username, setUsername, password, set
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.7rem" }}>
           <input className="u-input" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" />
+          {!isLogin && <input className="u-input" placeholder="Email address" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />}
           <input className="u-input" placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={isLogin ? "current-password" : "new-password"} />
           {error && <p style={{ color: COLORS.danger, fontSize: "0.82rem", margin: 0 }}>{error}</p>}
           <button
