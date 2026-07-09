@@ -361,4 +361,4 @@ For questions, issues, or feature requests:
 
 ---
 
-**Made with ❤️ for thoughtful shopping**
+**Made with ❤️ for thoughtful shopping by Sho_hit**
