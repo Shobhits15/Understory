@@ -42,8 +42,23 @@ export function ProductDetail({ product, isLiked, onClose, onLike, onAddToCart }
         {/* Content */}
         <div style={{ padding: "2rem 1.5rem", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           {/* Product Image */}
-          <div style={{ textAlign: "center", background: `${COLORS.gold}08`, borderRadius: 12, padding: "3rem 1rem", fontSize: "5rem" }}>
-            {product.image}
+          <div style={{ textAlign: "center", background: `${COLORS.gold}08`, borderRadius: 12, padding: "2rem 1rem", fontSize: "5rem", overflow: "hidden", minHeight: "280px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {product.image.startsWith("http") ? (
+              <img
+                src={product.image}
+                alt={product.name}
+                style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
+                onError={(e) => {
+                  e.target.style.display = "none";
+                  if (e.target.nextSibling) e.target.nextSibling.style.display = "block";
+                }}
+              />
+            ) : (
+              <div>{product.image}</div>
+            )}
+            {product.image.startsWith("http") && (
+              <div style={{ display: "none", fontSize: "5rem" }}>📦</div>
+            )}
           </div>
 
           {/* Product Info */}

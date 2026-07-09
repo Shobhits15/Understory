@@ -29,7 +29,24 @@ export function ProductCard({ product, liked, onLike, onAdd, onProductClick, rea
       }}
     >
       <div style={{ position: "relative", height: 140, background: `linear-gradient(135deg, ${meta.from}, ${meta.to})`, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", fontSize: "3.5rem" }}>
-        {product.image}
+        {product.image.startsWith("http") ? (
+          <img
+            src={product.image}
+            alt={product.name}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            onError={(e) => {
+              e.target.style.display = "none";
+              e.target.nextSibling.style.display = "flex";
+            }}
+          />
+        ) : (
+          <div style={{ display: "flex" }}>{product.image}</div>
+        )}
+        {product.image.startsWith("http") && (
+          <div style={{ position: "absolute", inset: 0, display: "none", alignItems: "center", justifyContent: "center", background: `linear-gradient(135deg, ${meta.from}, ${meta.to})`, fontSize: "3.5rem" }}>
+            {product.image.includes("vase") ? "🏺" : product.image.includes("bowl") ? "🥣" : "📦"}
+          </div>
+        )}
         <div style={{ position: "absolute", top: 10, left: 10, width: 26, height: 26, borderRadius: "50%", background: "rgba(32,43,34,0.55)", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <Icon size={14} color="#fff" />
         </div>
