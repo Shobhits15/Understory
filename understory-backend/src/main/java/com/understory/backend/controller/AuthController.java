@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 @RequestMapping("/api/auth")
 @CrossOrigin(
         origins = {
-                "https://understory-ten.vercel.app",
+                "https://*.vercel.app",
                 "http://localhost:3000",
                 "http://localhost:5173"
         }
