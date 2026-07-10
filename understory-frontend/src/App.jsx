@@ -2,11 +2,10 @@ import { useState, useEffect } from "react";
 import { COLORS } from "./constants/colors";
 import { PRODUCTS, TAG_LABELS } from "./constants/products";
 import { scoreProduct, bumpProfileObj } from "./utils/productUtils";
-import { apiRegister, apiVerifyEmail, apiResendOtp, apiLogin, saveProfileRecord } from "./api/client";
+import { apiRegister, apiLogin, saveProfileRecord } from "./api/client";
 
 import { GlobalStyle } from "./components/GlobalStyle";
 import { AuthScreen } from "./components/AuthScreen";
-import { OtpVerificationScreen } from "./components/OtpVerificationScreen";
 import { Header } from "./components/Header";
 import { TasteProfilePanel } from "./components/TasteProfilePanel";
 import { RecommendationsSection } from "./components/RecommendationsSection";
@@ -25,8 +24,6 @@ export default function App() {
   const [authPassword, setAuthPassword] = useState("");
   const [authError, setAuthError] = useState("");
   const [authBusy, setAuthBusy] = useState(false);
-  const [otpVerificationMode, setOtpVerificationMode] = useState(false);
-  const [otpExpiryMinutes, setOtpExpiryMinutes] = useState(10);
   const [currentUser, setCurrentUser] = useState(null);
   const [isGuest, setIsGuest] = useState(false);
 
@@ -96,9 +93,14 @@ export default function App() {
     }
     setAuthBusy(true);
     try {
-      const response = await apiRegister(uname, email, authPassword);
-      setOtpExpiryMinutes(response.otpExpiryMinutes || 10);
-      setOtpVerificationMode(true);
+      await apiRegister(uname, email, authPassword);
+      setCurrentUser(uname);
+      setIsGuest(false);
+      setLikes({});
+      setCart({});
+      setProfile({});
+      setProfileVersion((v) => v + 1);
+      setScreen("shop");
       setAuthError("");
     } catch (err) {
       setAuthError(err.message || "Signup failed.");
@@ -107,45 +109,7 @@ export default function App() {
     }
   }
 
-  async function handleVerifyEmail(email, otp) {
-    setAuthError("");
-    if (!otp || otp.length !== 6) {
-      setAuthError("Please enter a valid 6-digit code.");
-      return;
-    }
-    setAuthBusy(true);
-    try {
-      await apiVerifyEmail(email, otp);
-      setCurrentUser(authUsername);
-      setIsGuest(false);
-      setLikes({});
-      setCart({});
-      setProfile({});
-      setProfileVersion((v) => v + 1);
-      setOtpVerificationMode(false);
-      setScreen("shop");
-    } catch (err) {
-      setAuthError(err.message || "OTP verification failed.");
-    } finally {
-      setAuthBusy(false);
-    }
-  }
-
-  async function handleResendOtp() {
-    setAuthError("");
-    setAuthBusy(true);
-    try {
-      await apiResendOtp(authEmail);
-      setAuthError("");
-    } catch (err) {
-      setAuthError(err.message || "Failed to resend OTP.");
-    } finally {
-      setAuthBusy(false);
-    }
-  }
-
   function handleBackFromOtp() {
-    setOtpVerificationMode(false);
     setAuthError("");
   }
 
@@ -195,7 +159,6 @@ export default function App() {
     setAuthEmail("");
     setAuthPassword("");
     setAuthMode("login");
-    setOtpVerificationMode(false);
     setScreen("auth");
   }
 
@@ -206,19 +169,6 @@ export default function App() {
   }
 
   if (screen === "auth") {
-    if (otpVerificationMode) {
-      return (
-        <OtpVerificationScreen
-          email={authEmail}
-          otpExpiryMinutes={otpExpiryMinutes}
-          error={authError}
-          busy={authBusy}
-          onVerify={handleVerifyEmail}
-          onResendOtp={handleResendOtp}
-          onBack={handleBackFromOtp}
-        />
-      );
-    }
     return (
       <AuthScreen
         mode={authMode}

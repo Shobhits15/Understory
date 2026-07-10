@@ -1,16 +1,11 @@
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\BackendApplication.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\model\ProfileRow.java
-E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\exception\EmailNotVerifiedException.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\model\ProductRow.java
-E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\util\OtpUtil.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\service\OrderService.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\dto\VerifyEmailRequest.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\model\Order.java
-E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\service\EmailService.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\model\OrderItem.java
-E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\exception\OtpExpiredException.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\dto\ProfilePayload.java
-E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\exception\OtpResendRateLimitExceededException.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\dto\CheckoutResponse.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\repository\OrderRepository.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\dto\RegisterRequest.java
@@ -23,8 +18,8 @@ E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\bac
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\handler\GlobalExceptionHandler.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\service\UserService.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\controller\AuthController.java
-E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\exception\InvalidOtpException.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\exception\UserAlreadyExistsException.java
+E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\config\DataSourceConfig.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\dto\VerifyResetOtpRequest.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\model\User.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\service\AuthService.java

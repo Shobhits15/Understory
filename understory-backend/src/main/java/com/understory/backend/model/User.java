@@ -28,13 +28,16 @@ public class User {
     @Column(length = 6)
     private String otp;
 
+    @Column
     private Long otpExpiry;
 
-    @Column(nullable = false)
+    @Column
     private Integer otpAttempts = 0;
 
+    @Column
     private Long lastOtpSent;
 
+    @Column
     private Long lastPasswordResetOtp;
 
     @Column(nullable = false)
@@ -101,6 +104,9 @@ public class User {
         this.emailVerified = emailVerified;
     }
 
+
+
+
     public String getOtp() {
         return otp;
     }
@@ -109,45 +115,7 @@ public class User {
         this.otp = otp;
     }
 
-    public Long getOtpExpiry() {
-        return otpExpiry;
-    }
 
-    public void setOtpExpiry(Long otpExpiry) {
-        this.otpExpiry = otpExpiry;
-    }
-
-    public Integer getOtpAttempts() {
-        return otpAttempts;
-    }
-
-    public void setOtpAttempts(Integer otpAttempts) {
-        this.otpAttempts = otpAttempts;
-    }
-
-    public Long getLastOtpSent() {
-        return lastOtpSent;
-    }
-
-    public void setLastOtpSent(Long lastOtpSent) {
-        this.lastOtpSent = lastOtpSent;
-    }
-
-    public Long getLastPasswordResetOtp() {
-        return lastPasswordResetOtp;
-    }
-
-    public void setLastPasswordResetOtp(Long lastPasswordResetOtp) {
-        this.lastPasswordResetOtp = lastPasswordResetOtp;
-    }
-
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Long createdAt) {
-        this.createdAt = createdAt;
-    }
 
     public Long getUpdatedAt() {
         return updatedAt;

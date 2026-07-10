@@ -3,7 +3,6 @@ package com.understory.backend.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.understory.backend.dto.ProfilePayload;
-import com.understory.backend.exception.EmailNotVerifiedException;
 import com.understory.backend.model.ProfileRow;
 import com.understory.backend.model.User;
 import com.understory.backend.repository.UserRepository;
@@ -36,6 +35,11 @@ public class UserService {
 
     public static class UsernameTakenException extends RuntimeException {}
     public static class InvalidCredentialsException extends RuntimeException {}
+    public static class EmailNotVerifiedException extends RuntimeException {
+        public EmailNotVerifiedException(String message) {
+            super(message);
+        }
+    }
 
     /** Creates a new user with a hashed password and an empty profile row. */
     public void signup(String username, String rawPassword) {
@@ -59,7 +63,7 @@ public class UserService {
         insertEmptyProfile(uname, now);
     }
 
-    /** Verifies credentials and returns the saved profile. Email must be verified. */
+    /** Verifies credentials and returns the saved profile. */
     public ProfilePayload login(String username, String rawPassword) {
         String uname = normalize(username);
         User user = userRepository.findByUsername(uname)
@@ -67,11 +71,6 @@ public class UserService {
 
         if (!passwordEncoder.matches(rawPassword, user.getPasswordHash())) {
             throw new InvalidCredentialsException();
-        }
-
-        // Check if email is verified
-        if (!user.getEmailVerified()) {
-            throw new EmailNotVerifiedException("Please verify your email before logging in");
         }
 
         return toPayload(findProfile(uname).orElse(null));
@@ -144,7 +143,7 @@ public class UserService {
         }
     }
 
-    private void insertEmptyProfile(String username, long updatedAt) {
+    public void insertEmptyProfile(String username, long updatedAt) {
         jdbc.update(
                 "INSERT INTO user_profiles (username, likes_json, cart_json, profile_json, updated_at) " +
                         "VALUES (?, ?, ?, ?, ?)",
