@@ -40,7 +40,6 @@ com\understory\backend\model\ProfileRow.class
 com\understory\backend\dto\CheckoutResponse.class
 com\understory\backend\dto\CheckoutResponse$OrderItemResponse.class
 com\understory\backend\config\CorsConfig.class
-com\understory\backend\config\DataSourceConfig.class
 com\understory\backend\repository\OrderRepository.class
 com\understory\backend\dto\ForgotPasswordRequest$Builder.class
 com\understory\backend\dto\ResetPasswordRequest$Builder.class

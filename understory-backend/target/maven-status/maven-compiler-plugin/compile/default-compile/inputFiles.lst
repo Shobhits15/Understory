@@ -19,7 +19,6 @@ E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\bac
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\service\UserService.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\controller\AuthController.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\exception\UserAlreadyExistsException.java
-E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\config\DataSourceConfig.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\dto\VerifyResetOtpRequest.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\model\User.java
 E:\RecomdationSys\understory\understory-backend\src\main\java\com\understory\backend\service\AuthService.java
