@@ -14,52 +14,26 @@ export async function apiRegister(username, email, password) {
   if (!res.ok) throw new Error(data.data?.message || data.message || "Registration failed.");
   return data.data;
 }
-
-export async function apiVerifyEmail(email, otp) {
-  const res = await fetch(`${API_BASE}/auth/verify-email`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, otp }),
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.message || "OTP verification failed.");
-  return data;
-}
-
-export async function apiResendOtp(email) {
-  const res = await fetch(`${API_BASE}/auth/resend-otp`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email }),
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.message || "Failed to resend OTP.");
-  return data;
-}
-
-export async function apiSignup(username, password) {
-  const res = await fetch(`${API_BASE}/auth/signup`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || "Signup failed.");
-  return data;
-}
-
-
 export async function apiLogin(username, password) {
   const res = await fetch(`${API_BASE}/auth/login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      username,
+      password
+    })
   });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || "Login failed.");
-  return data; // { likes, cart, profile }
-}
 
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    throw new Error(data.message || "Login failed");
+  }
+
+  return data.data;
+}
 export async function getProfileRecord(username) {
   try {
     const res = await fetch(`${API_BASE}/users/${encodeURIComponent(username)}/profile`);

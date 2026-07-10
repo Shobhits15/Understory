@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/auth")
+
 public class AuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -27,7 +28,6 @@ public class AuthController {
 
     /**
      * POST /api/auth/register
-     * Registers a new user and sends OTP to their email
      */
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<RegisterResponse>> register(@RequestBody RegisterRequest request) {

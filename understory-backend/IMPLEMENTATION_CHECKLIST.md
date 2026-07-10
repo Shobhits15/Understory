@@ -65,20 +65,11 @@
 
 ---
 
-## API Endpoints Implemented (7 Endpoints)
-
-### Registration & Verification
-- ✅ `POST /api/auth/register` - Register user, send OTP (201 Created)
-- ✅ `POST /api/auth/verify-email` - Verify email with OTP (200 OK)
-- ✅ `POST /api/auth/resend-otp` - Resend OTP with rate limiting (200 OK)
+## API Endpoints Implemented (2 Endpoints)
 
 ### Authentication
-- ✅ `POST /api/auth/login` - Login with email verification check (200 OK / 401 Unauthorized)
-
-### Password Recovery
-- ✅ `POST /api/auth/forgot-password` - Initiate password reset (200 OK)
-- ✅ `POST /api/auth/verify-reset-otp` - Verify reset OTP (200 OK)
-- ✅ `POST /api/auth/reset-password` - Reset password (200 OK)
+- ✅ `POST /api/auth/register` - Register user (201 Created)
+- ✅ `POST /api/auth/login` - Login (200 OK / 401 Unauthorized)
 
 ---
 
@@ -236,7 +227,7 @@
 
 ## Backward Compatibility
 
-- ✅ Existing `/api/auth/signup` endpoint works
+- ✅ Existing `/api/auth/register` endpoint works
 - ✅ Legacy user profiles accessible
 - ✅ Old user data migrated automatically
 - ✅ No breaking changes to existing endpoints

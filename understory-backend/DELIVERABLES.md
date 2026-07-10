@@ -305,7 +305,7 @@ spring-boot-starter-thymeleaf
 ## Backward Compatibility
 
 ✅ **No Breaking Changes**
-- Existing `/api/auth/signup` endpoint still works
+- ✅ Existing `/api/auth/register` endpoint still works
 - Old user profiles remain accessible
 - Legacy login flow updated, not replaced
 - Gradual migration path for frontend

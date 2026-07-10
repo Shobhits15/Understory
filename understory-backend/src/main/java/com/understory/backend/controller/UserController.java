@@ -25,7 +25,7 @@ public class UserController {
     }
 
     // DEPRECATED: Use AuthController endpoints instead (with OTP support)
-    @PostMapping("/legacy/auth/signup")
+    @PostMapping("/legacy/auth/register")
     public ResponseEntity<?> signupLegacy(@RequestBody AuthRequest req) {
         if (isBlank(req.getUsername()) || isBlank(req.getPassword())) {
             return ResponseEntity.badRequest().body(Map.of("error", "Username and password are required."));

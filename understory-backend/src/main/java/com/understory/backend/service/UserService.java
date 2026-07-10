@@ -35,11 +35,6 @@ public class UserService {
 
     public static class UsernameTakenException extends RuntimeException {}
     public static class InvalidCredentialsException extends RuntimeException {}
-    public static class EmailNotVerifiedException extends RuntimeException {
-        public EmailNotVerifiedException(String message) {
-            super(message);
-        }
-    }
 
     /** Creates a new user with a hashed password and an empty profile row. */
     public void signup(String username, String rawPassword) {
@@ -50,12 +45,8 @@ public class UserService {
         long now = System.currentTimeMillis();
         User user = User.builder()
                 .username(uname)
-                .email(uname + "@understory.local") // Fallback for legacy signup
+                .email(uname + "@understory.local")
                 .passwordHash(passwordEncoder.encode(rawPassword))
-                .emailVerified(false)
-                .otp(null)
-                .otpExpiry(null)
-                .otpAttempts(0)
                 .createdAt(now)
                 .updatedAt(now)
                 .build();

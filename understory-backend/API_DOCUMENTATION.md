@@ -1,12 +1,12 @@
-# Email OTP Verification API Documentation
+# Understory Backend API Documentation
 
 ## Overview
 
-This document describes the complete Email OTP Verification API endpoints implemented in the Understory e-commerce platform. All endpoints return consistent JSON responses with `success`, `message`, `data`, `timestamp`, and optional `error` fields.
+REST API for the Understory e-commerce platform. Handles user authentication, profiles, product recommendations, and order management.
 
 ## Base URL
 ```
-http://localhost:8080/api
+http://localhost:8088/api
 ```
 
 ## Response Format
@@ -17,11 +17,12 @@ All API responses follow this format:
 {
   "success": true/false,
   "message": "Response message",
-  "timestamp": "2026-07-09T12:00:00Z",
   "data": {...},        // Optional, only when applicable
   "error": "ERROR_CODE" // Optional, only on errors
 }
 ```
+
+---
 
 ## Authentication Endpoints
 
@@ -29,142 +30,48 @@ All API responses follow this format:
 
 **Endpoint:** `POST /api/auth/register`
 
-Register a new user and send OTP to their email.
+Register a new user.
 
 **Request:**
 ```json
 {
   "username": "john_doe",
   "email": "john@example.com",
-  "password": "Secure@Pass123"
+  "password": "secure_password"
 }
 ```
-
-**Request Validation:**
-- `username`: 3-64 characters, alphanumeric with underscores allowed
-- `email`: Valid email format
-- `password`: At least 8 characters, must contain:
-  - At least one letter (a-z, A-Z)
-  - At least one number (0-9)
-  - At least one special character (@$!%*#?&)
 
 **Response Success (201 Created):**
 ```json
 {
   "success": true,
-  "message": "Registration successful. OTP sent to your email.",
-  "timestamp": "2026-07-09T12:00:00Z",
+  "message": "Registration successful.",
   "data": {
-    "message": "Registration successful. Please verify your email with the OTP sent to your inbox.",
-    "email": "john@example.com",
-    "otpExpiryMinutes": 10
+    "username": "john_doe",
+    "likes": {},
+    "cart": {},
+    "profile": {}
   }
 }
 ```
 
 **Response Errors:**
 - `400 Bad Request`: Missing or invalid fields
-  - "Username is required"
-  - "Email is required"
-  - "Invalid email format"
-  - "Password must be at least 8 characters long"
-  - "Password must contain at least one letter, one number, and one special character"
-
-- `409 Conflict`: User already exists
-  - "Username is already taken"
-  - "Email is already registered"
-
-- `500 Internal Server Error`: Email sending failed
-  - "Failed to send OTP. Please try again later."
+- `409 Conflict`: Username or email already exists
 
 ---
 
-### 2. Verify Email (OTP Verification)
-
-**Endpoint:** `POST /api/auth/verify-email`
-
-Verify user's email using the OTP sent to their email.
-
-**Request:**
-```json
-{
-  "email": "john@example.com",
-  "otp": "123456"
-}
-```
-
-**Response Success (200 OK):**
-```json
-{
-  "success": true,
-  "message": "Email verified successfully. You can now log in.",
-  "timestamp": "2026-07-09T12:00:00Z"
-}
-```
-
-**Response Errors:**
-- `400 Bad Request`: Invalid OTP or validation failed
-  - "Invalid OTP. Attempt 1 of 5"
-  - "OTP has expired. Please request a new one."
-  - "Maximum OTP attempts exceeded. Please request a new OTP."
-
-- `404 Not Found`: User not found
-  - "User not found"
-
-- `409 Conflict`: Email already verified
-  - "Email is already verified"
-
----
-
-### 3. Resend OTP
-
-**Endpoint:** `POST /api/auth/resend-otp`
-
-Resend OTP to user's email (rate-limited to once per 60 seconds).
-
-**Request:**
-```json
-{
-  "email": "john@example.com"
-}
-```
-
-**Response Success (200 OK):**
-```json
-{
-  "success": true,
-  "message": "OTP resent to your email. Please check your inbox.",
-  "timestamp": "2026-07-09T12:00:00Z"
-}
-```
-
-**Response Errors:**
-- `429 Too Many Requests`: Rate limit exceeded
-  - "Please wait 45 seconds before requesting a new OTP"
-
-- `400 Bad Request`: Email already verified or invalid
-  - "Email is already verified"
-  - "Invalid email format"
-
-- `404 Not Found`: User not found
-  - "User not found"
-
-- `500 Internal Server Error`: Email sending failed
-  - "Failed to send OTP. Please try again later."
-
----
-
-### 4. Login
+### 2. Login
 
 **Endpoint:** `POST /api/auth/login`
 
-Log in user with username and password. Email must be verified.
+Log in user with username and password.
 
 **Request:**
 ```json
 {
   "username": "john_doe",
-  "password": "Secure@Pass123"
+  "password": "secure_password"
 }
 ```
 
@@ -173,7 +80,6 @@ Log in user with username and password. Email must be verified.
 {
   "success": true,
   "message": "Login successful",
-  "timestamp": "2026-07-09T12:00:00Z",
   "data": {
     "likes": {...},
     "cart": {...},
@@ -183,191 +89,285 @@ Log in user with username and password. Email must be verified.
 ```
 
 **Response Errors:**
-- `401 Unauthorized`: Invalid credentials or email not verified
-  - "Invalid credentials"
-  - "Please verify your email before logging in"
-
-- `400 Bad Request`: Missing fields
-  - "Username and password are required."
+- `401 Unauthorized`: Invalid credentials
+- `400 Bad Request`: Missing username or password
 
 ---
 
-### 5. Forgot Password
+## User Profiles
 
-**Endpoint:** `POST /api/auth/forgot-password`
+### Get User Profile
 
-Initiate password reset by sending OTP to user's email.
+**Endpoint:** `GET /api/users/{username}/profile`
+
+Retrieve user's profile including likes, cart, and preferences.
+
+**Response (200 OK):**
+```json
+{
+  "likes": { "p1": true, "p3": true },
+  "cart": { "p1": 2 },
+  "profile": { "ceramic": 0.8, "warm": 0.6 }
+}
+```
+
+---
+
+### Update User Profile
+
+**Endpoint:** `PUT /api/users/{username}/profile`
+
+Update user's profile, likes, and cart.
 
 **Request:**
 ```json
 {
-  "email": "john@example.com"
+  "likes": { "p1": true, "p5": true },
+  "cart": { "p2": 2, "p4": 1 },
+  "profile": { "ceramic": 1.0, "warm": 0.8 }
 }
 ```
 
-**Response Success (200 OK):**
-```json
-{
-  "success": true,
-  "message": "Password reset OTP sent to your email. Please check your inbox.",
-  "timestamp": "2026-07-09T12:00:00Z"
-}
-```
-
-**Response Errors:**
-- `400 Bad Request`: Email not verified
-  - "Please verify your email before resetting password"
-  - "Invalid email format"
-
-- `404 Not Found`: User not found
-  - "User not found"
-
-- `500 Internal Server Error`: Email sending failed
-  - "Failed to send reset code. Please try again later."
+**Response (204 No Content)**
 
 ---
 
-### 6. Verify Reset OTP
+## Products & Recommendations
 
-**Endpoint:** `POST /api/auth/verify-reset-otp`
+### Get All Products
 
-Verify the OTP for password reset.
+**Endpoint:** `GET /api/recommendations/products`
+
+Retrieve all products in the catalog.
+
+**Response (200 OK):**
+```json
+[
+  {
+    "id": "p1",
+    "name": "Terra vase",
+    "price": 58,
+    "category": "Ceramics",
+    "image": "🏺",
+    "description": "Handcrafted ceramic vase...",
+    "tags": { "ceramic": 1.0, "warm": 0.8 }
+  },
+  ...
+]
+```
+
+---
+
+### Get Single Product
+
+**Endpoint:** `GET /api/recommendations/products/{productId}`
+
+Retrieve a specific product.
+
+**Response (200 OK):**
+```json
+{
+  "id": "p1",
+  "name": "Terra vase",
+  "price": 58,
+  "category": "Ceramics",
+  "image": "🏺",
+  "description": "Handcrafted ceramic vase...",
+  "tags": { "ceramic": 1.0, "warm": 0.8 }
+}
+```
+
+---
+
+### Get Personalized Recommendations
+
+**Endpoint:** `GET /api/recommendations/user/{userId}/product/{productId}?top=8`
+
+Get AI-powered recommendations based on user taste profile.
+
+**Response (200 OK):**
+```json
+[
+  { "id": "p2", "name": "Ash bowl set", ... },
+  { "id": "p5", "name": "Woven throw", ... },
+  ...
+]
+```
+
+---
+
+### Get Content-Based Recommendations
+
+**Endpoint:** `GET /api/recommendations/content-based/{productId}?top=5`
+
+Get similar products based on content attributes.
+
+**Response (200 OK):**
+```json
+[
+  { "id": "p2", "name": "Similar product", ... },
+  ...
+]
+```
+
+---
+
+## Orders
+
+### Create Order
+
+**Endpoint:** `POST /api/orders/create`
+
+Place a new order.
 
 **Request:**
 ```json
 {
+  "username": "john_doe",
+  "fullName": "John Doe",
   "email": "john@example.com",
-  "otp": "123456"
+  "phone": "9876543210",
+  "address": "123 Main Street",
+  "city": "New York",
+  "pincode": "10001",
+  "paymentMode": "card",
+  "items": [
+    { "id": "p1", "name": "Terra vase", "price": 58, "qty": 2 },
+    { "id": "p5", "name": "Woven throw", "price": 89, "qty": 1 }
+  ],
+  "totalAmount": 205
 }
 ```
 
-**Response Success (200 OK):**
+**Response (201 Created):**
 ```json
 {
-  "success": true,
-  "message": "OTP verified. You can now reset your password.",
-  "timestamp": "2026-07-09T12:00:00Z"
+  "orderId": "ORD-1704067200000-ABC123XYZ",
+  "message": "Order placed successfully"
 }
 ```
-
-**Response Errors:**
-- `400 Bad Request`: Invalid OTP
-  - "Invalid OTP. Attempt 1 of 5"
-  - "OTP has expired. Please request a new one."
-  - "Maximum OTP attempts exceeded. Please request a new OTP."
-
-- `404 Not Found`: User not found
-  - "User not found"
 
 ---
 
-### 7. Reset Password
+### Get User Orders
 
-**Endpoint:** `POST /api/auth/reset-password`
+**Endpoint:** `GET /api/orders/user/{username}`
 
-Reset user password after OTP verification.
+Retrieve all orders for a user.
+
+**Response (200 OK):**
+```json
+[
+  {
+    "orderId": "ORD-1704067200000-ABC123XYZ",
+    "username": "john_doe",
+    "fullName": "John Doe",
+    "totalAmount": 205,
+    "orderStatus": "pending",
+    "createdAt": "2024-01-01T10:00:00",
+    "items": [
+      { "productId": "p1", "productName": "Terra vase", "price": 58, "quantity": 2 }
+    ]
+  }
+]
+```
+
+---
+
+### Get Order by ID
+
+**Endpoint:** `GET /api/orders/{orderId}`
+
+Retrieve a specific order.
+
+**Response (200 OK):**
+```json
+{
+  "orderId": "ORD-1704067200000-ABC123XYZ",
+  "username": "john_doe",
+  "orderStatus": "pending",
+  "totalAmount": 205,
+  "items": [...]
+}
+```
+
+---
+
+### Get All Orders (Admin)
+
+**Endpoint:** `GET /api/orders/all`
+
+Retrieve all orders in the system (admin only).
+
+**Response (200 OK):**
+```json
+[
+  {
+    "orderId": "ORD-...",
+    "username": "user1",
+    "orderStatus": "pending",
+    ...
+  },
+  ...
+]
+```
+
+---
+
+### Update Order Status
+
+**Endpoint:** `PUT /api/orders/{orderId}/status`
+
+Update the status of an order.
 
 **Request:**
 ```json
 {
-  "email": "john@example.com",
-  "newPassword": "NewSecure@Pass456",
-  "otp": "123456"
+  "status": "confirmed"
 }
 ```
 
-**Password Requirements:**
-Same as registration (min 8 chars, must include letter, number, special char)
+Valid statuses: `pending`, `confirmed`, `shipped`, `delivered`, `cancelled`
 
-**Response Success (200 OK):**
+**Response (200 OK):**
 ```json
 {
-  "success": true,
-  "message": "Password reset successfully. You can now log in with your new password.",
-  "timestamp": "2026-07-09T12:00:00Z"
+  "orderId": "ORD-...",
+  "orderStatus": "confirmed",
+  "message": "Order status updated"
 }
+```
+
+---
+
+## Admin
+
+### List All Users
+
+**Endpoint:** `GET /api/admin/users`
+
+**Header:**
+```
+X-Admin-Passcode: Admin
+```
+
+Retrieve all users and their profiles.
+
+**Response (200 OK):**
+```json
+[
+  {
+    "username": "john_doe",
+    "likes": { "p1": true },
+    "cart": { "p2": 1 },
+    "profile": { "ceramic": 0.8 }
+  },
+  ...
+]
 ```
 
 **Response Errors:**
-- `400 Bad Request`: Invalid password or OTP
-  - "Password must be at least 8 characters long"
-  - "Password must contain at least one letter, one number, and one special character"
-  - "Invalid OTP. Attempt 1 of 5"
-  - "OTP has expired. Please request a new one."
-
-- `404 Not Found`: User not found
-  - "User not found"
-
----
-
-## Security Features
-
-### OTP Management
-- **OTP Length:** 6 digits, randomly generated using SecureRandom
-- **OTP Expiry:** 10 minutes (configurable via `otp.expiry.minutes`)
-- **Maximum Attempts:** 5 wrong attempts (configurable via `otp.max.attempts`)
-- **Resend Cooldown:** 60 seconds between resend requests (configurable via `otp.resend.cooldown.seconds`)
-
-### Rate Limiting
-- Resend OTP is rate-limited to prevent abuse
-- Maximum 5 OTP verification attempts before requiring a new OTP
-
-### Password Security
-- Passwords are hashed using BCrypt with salt
-- Passwords are never stored or returned in API responses
-- OTP is never returned in successful verification responses
-
-### Email Verification
-- Email verification is mandatory before login
-- Users cannot log in until their email is verified
-- Account creation is completed immediately, but login requires email verification
-
----
-
-## Configuration
-
-Update `application.properties` with your email settings:
-
-```properties
-# Email Configuration - Resend SMTP
-spring.mail.host=smtp.resend.com
-spring.mail.port=587
-spring.mail.username=resend
-spring.mail.password=YOUR_RESEND_API_KEY
-spring.mail.properties.mail.smtp.auth=true
-spring.mail.properties.mail.smtp.starttls.enable=true
-spring.mail.properties.mail.smtp.starttls.required=true
-
-# OTP Configuration
-otp.length=6
-otp.expiry.minutes=10
-otp.resend.cooldown.seconds=60
-otp.max.attempts=5
-
-# Email Configuration
-email.from=noreply@understory.com
-email.from.name=Understory Shop
-```
-
----
-
-## Database Schema
-
-The following fields are added to the `users` table:
-
-```sql
-ALTER TABLE users ADD COLUMN (
-    email VARCHAR(100) UNIQUE NOT NULL,
-    email_verified BOOLEAN DEFAULT FALSE,
-    otp VARCHAR(6),
-    otp_expiry BIGINT,
-    otp_attempts INT DEFAULT 0,
-    last_otp_sent BIGINT,
-    last_password_reset_otp BIGINT
-);
-
-CREATE INDEX idx_email ON users(email);
-```
+- `403 Forbidden`: Wrong admin passcode
 
 ---
 
@@ -379,127 +379,55 @@ CREATE INDEX idx_email ON users(email);
 | REGISTRATION_ERROR | 400 | Registration failed |
 | USER_EXISTS | 409 | User/Email already registered |
 | USER_NOT_FOUND | 404 | User doesn't exist |
-| INVALID_OTP | 400 | OTP is incorrect |
-| OTP_EXPIRED | 400 | OTP has expired |
-| EMAIL_NOT_VERIFIED | 403 | Email verification required |
-| RATE_LIMIT_EXCEEDED | 429 | Too many requests |
-| EMAIL_ERROR | 500 | Email sending failed |
 | AUTH_ERROR | 401 | Authentication failed |
 | INTERNAL_ERROR | 500 | Server error |
 
 ---
 
-## Email Templates
+## Testing Endpoints
 
-### OTP Verification Email
-- Company branding with logo
-- Welcome message
-- Large, prominently displayed OTP code
-- Expiry notice (10 minutes)
-- Security warning for unsolicited emails
+### Using cURL
 
-### Password Reset Email
-- Company branding with logo
-- Password reset notification
-- Large, prominently displayed OTP code
-- Expiry notice (10 minutes)
-- Security warning and instructions
-
----
-
-## Usage Examples
-
-### Example: Complete Registration and Login Flow
-
-1. **Register:**
 ```bash
-curl -X POST http://localhost:8080/api/auth/register \
+# Register
+curl -X POST http://localhost:8088/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"username":"testuser","email":"test@example.com","password":"test123"}'
+
+# Login
+curl -X POST http://localhost:8088/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"testuser","password":"test123"}'
+
+# Get all products
+curl http://localhost:8088/api/recommendations/products
+
+# Get user profile
+curl http://localhost:8088/api/users/testuser/profile
+
+# Create order
+curl -X POST http://localhost:8088/api/orders/create \
   -H "Content-Type: application/json" \
   -d '{
-    "username": "john_doe",
-    "email": "john@example.com",
-    "password": "Secure@Pass123"
+    "username":"testuser",
+    "fullName":"Test User",
+    "email":"test@example.com",
+    "phone":"9876543210",
+    "address":"123 Test St",
+    "city":"Test City",
+    "pincode":"123456",
+    "paymentMode":"cod",
+    "items":[{"id":"p1","name":"Product 1","price":50,"qty":1}],
+    "totalAmount":50
   }'
+
+# List all users (admin)
+curl http://localhost:8088/api/admin/users \
+  -H "X-Admin-Passcode: Admin"
 ```
-
-2. **Verify Email (after receiving OTP from email):**
-```bash
-curl -X POST http://localhost:8080/api/auth/verify-email \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "john@example.com",
-    "otp": "123456"
-  }'
-```
-
-3. **Login:**
-```bash
-curl -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "john_doe",
-    "password": "Secure@Pass123"
-  }'
-```
-
-### Example: Forgot Password Flow
-
-1. **Request Password Reset:**
-```bash
-curl -X POST http://localhost:8080/api/auth/forgot-password \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "john@example.com"
-  }'
-```
-
-2. **Verify Reset OTP:**
-```bash
-curl -X POST http://localhost:8080/api/auth/verify-reset-otp \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "john@example.com",
-    "otp": "123456"
-  }'
-```
-
-3. **Reset Password:**
-```bash
-curl -X POST http://localhost:8080/api/auth/reset-password \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "john@example.com",
-    "newPassword": "NewSecure@Pass456",
-    "otp": "123456"
-  }'
-```
-
----
-
-## Troubleshooting
-
-### Common Issues
-
-1. **"Failed to send OTP"**
-   - Verify Resend SMTP credentials are correct
-   - Check internet connection
-   - Verify email configuration in `application.properties`
-
-2. **"Maximum OTP attempts exceeded"**
-   - Request a new OTP using the resend endpoint
-   - Wait for the cooldown period to expire
-
-3. **"Email is already verified"**
-   - User has already verified their email
-   - Proceed to login
-
-4. **"Please verify your email before logging in"**
-   - User must complete email verification first
-   - Check spam folder for verification email
-   - Use resend-otp if initial email not received
 
 ---
 
 ## Support
 
-For issues or questions regarding the Email OTP Verification system, please contact the development team.
+For issues or questions, please contact the development team.

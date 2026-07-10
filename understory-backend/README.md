@@ -112,7 +112,7 @@ CREATE TABLE order_items (
 
 #### Sign Up
 ```
-POST /api/auth/signup
+POST /api/auth/register
 Content-Type: application/json
 
 {
@@ -451,7 +451,7 @@ APP_ADMIN_PASSCODE=YourSecurePasscode
 
 ```bash
 # Signup
-curl -X POST http://localhost:8088/api/auth/signup \
+curl -X POST http://localhost:8088/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"username":"testuser","password":"test123"}'
 

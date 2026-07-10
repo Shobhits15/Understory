@@ -170,7 +170,6 @@ understory-backend/
 | Method | Endpoint | Purpose |
 |--------|----------|---------|
 | POST | `/api/auth/register` | Register new user, send OTP |
-| POST | `/api/auth/verify-email` | Verify email with OTP |
 | POST | `/api/auth/resend-otp` | Resend OTP (rate-limited) |
 | POST | `/api/auth/login` | Login (requires email verification) |
 | POST | `/api/auth/forgot-password` | Initiate password reset |
@@ -178,7 +177,7 @@ understory-backend/
 | POST | `/api/auth/reset-password` | Reset password |
 
 **Legacy Endpoints (Maintained for Backward Compatibility):**
-- POST `/api/auth/signup` - Old registration method
+- POST `/api/auth/register` - Registration method
 - POST `/api/auth/login` - Now requires email verification
 
 ---
@@ -341,7 +340,7 @@ curl -X POST http://localhost:8080/api/auth/login \
 
 The implementation maintains backward compatibility:
 
-- Existing `/api/auth/signup` endpoint still works
+- Existing `/api/auth/register` endpoint still works
 - Legacy `UserService.signup()` method updated
 - Existing `/api/auth/login` enhanced (now checks email verification)
 - Old user profiles remain accessible

@@ -34,7 +34,6 @@ com\understory\backend\repository\UserRepository.class
 com\understory\backend\service\UserService$UsernameTakenException.class
 com\understory\backend\dto\ResetPasswordRequest.class
 com\understory\backend\dto\ProfilePayload.class
-com\understory\backend\service\UserService$EmailNotVerifiedException.class
 com\understory\backend\model\ProductRow.class
 com\understory\backend\dto\VerifyResetOtpRequest.class
 com\understory\backend\model\ProfileRow.class

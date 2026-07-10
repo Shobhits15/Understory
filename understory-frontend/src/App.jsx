@@ -109,10 +109,6 @@ export default function App() {
     }
   }
 
-  function handleBackFromOtp() {
-    setAuthError("");
-  }
-
   async function handleLogin() {
     setAuthError("");
     const uname = authUsername.trim().toLowerCase();
@@ -122,16 +118,18 @@ export default function App() {
     }
     setAuthBusy(true);
     try {
-      const saved = await apiLogin(uname, authPassword);
+      await apiLogin(uname, authPassword);
+
       setCurrentUser(uname);
       setIsGuest(false);
-      setLikes((saved && saved.likes) || {});
-      setCart((saved && saved.cart) || {});
-      setProfile((saved && saved.profile) || {});
+      setLikes({});
+      setCart({});
+      setProfile({});
       setProfileVersion((v) => v + 1);
       setScreen("shop");
+
     } catch (err) {
-      setAuthError(err.message || "Wrong username or password.");
+      setAuthError(err.message || "Login failed.");
     } finally {
       setAuthBusy(false);
     }
