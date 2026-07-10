@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
                 "http://localhost:5173"
         }
 )
-public class AuthController {
+
 
 public class AuthController {
 
