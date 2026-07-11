@@ -2,7 +2,7 @@
 // project). Override at build time with VITE_API_BASE in a .env file if you
 // deploy the backend somewhere other than localhost:8080, e.g.:
 //   VITE_API_BASE=https://api.yourdomain.com/api
-export const API_BASE = import.meta.env.VITE_API_BASE
+export const API_BASE = import.meta.env.VITE_API_BASE || ''
 
 export async function apiRegister(username, email, password) {
   const res = await fetch(`${API_BASE}/auth/register`, {
