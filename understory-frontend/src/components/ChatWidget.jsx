@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { API_BASE } from "../api/client";
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -39,7 +40,9 @@ export default function ChatWidget() {
     setLoading(true);
     appendMessage("bot", "…"); // placeholder while loading
     try {
-      const res = await fetch("/api/chat", {
+      const base = (typeof API_BASE === 'string' && API_BASE) ? API_BASE.replace(/\/$/, '') : '';
+      const url = base ? `${base}/chat` : "/api/chat";
+      const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text }),
