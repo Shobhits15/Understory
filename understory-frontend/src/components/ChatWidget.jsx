@@ -2,10 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import { API_BASE } from "../api/client";
 
 export default function ChatWidget() {
+  const botName = "Understory Assistant";
   const [open, setOpen] = useState(false);
   const [useLive, setUseLive] = useState(false);
   const [messages, setMessages] = useState([
-    { id: 1, who: "bot", text: "Hi — I'm a Shobhit's assistant. Ask me anything about the shop!" },
+    { id: 1, who: "bot", text: `Hi — I'm ${botName}. Ask me anything about the shop!` },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -107,7 +108,7 @@ export default function ChatWidget() {
             }}
           >
             <div style={{ padding: "0.6rem 0.9rem", borderBottom: "1px solid #eee", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div style={{ fontWeight: 700 }}>Assistant {useLive ? "(Live)" : "(Demo)"}</div>
+              <div style={{ fontWeight: 700 }}>{botName} {useLive ? "(Live)" : "(Demo)"}</div>
               <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                 <label style={{ fontSize: 12, color: "#555" }}>
                   <input type="checkbox" checked={useLive} onChange={(e) => setUseLive(e.target.checked)} style={{ marginRight: 6 }} />

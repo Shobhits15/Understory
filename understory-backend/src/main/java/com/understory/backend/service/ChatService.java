@@ -109,27 +109,36 @@ public class ChatService {
             String url = "https://generativelanguage.googleapis.com/v1/models/text-bison-001:generate?key=" + googleApiKey;
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
-            ResponseEntity<Map> resp = rest.postForEntity(url, entity, Map.class);
-            if (resp.getStatusCode().is2xxSuccessful() && resp.getBody() != null) {
-                // Expected response contains 'candidates' array with 'output' or 'content'
-                Object candidatesObj = resp.getBody().get("candidates");
-                if (candidatesObj instanceof List) {
-                    List candidates = (List) candidatesObj;
-                    if (!candidates.isEmpty()) {
-                        Object first = candidates.get(0);
-                        if (first instanceof Map) {
-                            Object content = ((Map) first).get("output");
-                            if (content == null) content = ((Map) first).get("content");
-                            if (content != null) return content.toString().trim();
+            ResponseEntity<String> resp = rest.postForEntity(url, entity, String.class);
+            String bodyStr = resp.getBody();
+            if (resp.getStatusCode().is2xxSuccessful() && bodyStr != null) {
+                try {
+                    com.fasterxml.jackson.databind.ObjectMapper om = new com.fasterxml.jackson.databind.ObjectMapper();
+                    Map parsed = om.readValue(bodyStr, Map.class);
+                    Object candidatesObj = parsed.get("candidates");
+                    if (candidatesObj instanceof List) {
+                        List candidates = (List) candidatesObj;
+                        if (!candidates.isEmpty()) {
+                            Object first = candidates.get(0);
+                            if (first instanceof Map) {
+                                Object content = ((Map) first).get("output");
+                                if (content == null) content = ((Map) first).get("content");
+                                if (content != null) return content.toString().trim();
+                            }
                         }
                     }
+                    Object textObj = parsed.get("text");
+                    if (textObj != null) return textObj.toString().trim();
+                } catch (Exception ex) {
+                    return "Google parse error: " + ex.getMessage() + " — raw: " + bodyStr;
                 }
-                // Some responses use 'candidates'[0].'message' or 'candidates'[0].'output'
-                Object textObj = resp.getBody().get("text");
-                if (textObj != null) return textObj.toString().trim();
+            } else {
+                String status = resp.getStatusCode().toString();
+                String msg = (bodyStr == null || bodyStr.isEmpty()) ? "[no body]" : bodyStr;
+                return "Google Generative API error: " + status + " — " + msg + "\nCheck API key, model name, and that the Generative API is enabled in GCP.";
             }
         } catch (Exception e) {
-            return "Google Generative API error: " + e.getMessage();
+            return "Google Generative API exception: " + e.getMessage();
         }
         return null;
     }
