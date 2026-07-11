@@ -15,6 +15,7 @@ import { CheckoutForm } from "./components/CheckoutForm";
 import { OrderHistory } from "./components/OrderHistory";
 import { ProductDetail } from "./components/ProductDetail";
 import { AdminPanel } from "./components/AdminPanel";
+import ChatWidget from "./components/ChatWidget";
 
 export default function App() {
   const [screen, setScreen] = useState("auth");
@@ -312,6 +313,7 @@ export default function App() {
       )}
 
       {showAdmin && <AdminPanel onClose={() => setShowAdmin(false)} />}
+      <ChatWidget />
     </div>
   );
 }

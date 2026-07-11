@@ -17,7 +17,8 @@ public class CorsConfig implements WebMvcConfigurer {
                         "https://understory-ten.vercel.app",
                         "https://*.vercel.app",
                         "https://*.railway.app",
-                        "https://understory-production-cec9.up.railway.app"
+                        "https://understory-production-cec9.up.railway.app",
+                        "https://understory-e455st9ht-understory3.vercel.app"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
