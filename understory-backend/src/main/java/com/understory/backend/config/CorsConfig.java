@@ -11,10 +11,13 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
 
         registry.addMapping("/**")
-                .allowedOrigins(
+                .allowedOriginPatterns(
                         "http://localhost:3000",
                         "http://localhost:5173",
-                        "https://understory-ten.vercel.app"
+                        "https://understory-ten.vercel.app",
+                        "https://*.vercel.app",
+                        "https://*.railway.app",
+                        "https://understory-production-cec9.up.railway.app"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
