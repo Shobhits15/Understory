@@ -135,6 +135,7 @@ export default function App() {
     }
   }
 
+  /*hi*/
   function handleGuest() {
     setAuthError("");
     setCurrentUser(null);
