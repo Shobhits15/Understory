@@ -1,10 +1,7 @@
 import { TAG_LABELS } from "../constants/products";
 
 export function imageUrl(product) {
-  if (!product || !product.image) return "";
-  if (typeof product.image === "string" && product.image.startsWith("http")) return product.image;
-  const lock = product.id ? product.id.replace(/\D/g, "") : "";
-  return `https://loremflickr.com/400/300/${encodeURIComponent(product.image)}?lock=${lock}`;
+  return `https://loremflickr.com/400/300/${product.image}?lock=${product.id.replace(/\D/g, "")}`;
 }
 
 export function scoreProduct(product, profile) {
