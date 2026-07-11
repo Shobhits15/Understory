@@ -1,7 +1,10 @@
 import { TAG_LABELS } from "../constants/products";
 
 export function imageUrl(product) {
-  return `https://loremflickr.com/400/300/${product.image}?lock=${product.id.replace(/\D/g, "")}`;
+  if (!product || !product.image) return "";
+  if (typeof product.image === "string" && product.image.startsWith("http")) return product.image;
+  const lock = product.id ? product.id.replace(/\D/g, "") : "";
+  return `https://loremflickr.com/400/300/${encodeURIComponent(product.image)}?lock=${lock}`;
 }
 
 export function scoreProduct(product, profile) {
