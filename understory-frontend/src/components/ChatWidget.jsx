@@ -5,7 +5,7 @@ export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [useLive, setUseLive] = useState(false);
   const [messages, setMessages] = useState([
-    { id: 1, who: "bot", text: "Hi — I'm a demo assistant. Ask me anything about the shop!" },
+    { id: 1, who: "bot", text: "Hi — I'm a Shobhit's assistant. Ask me anything about the shop!" },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -77,7 +77,7 @@ export default function ChatWidget() {
     if (t.includes("image") || t.includes("photo")) return "Product images load from external sources. If you see a broken image, check console/network for CORS or URL issues.";
     if (t.includes("cart")) return "To add items to cart, click 'Add' on a product card — this demo simulates that flow without a real backend.";
     if (t.includes("hello") || t.includes("hi")) return "Hello — welcome to Understory! Try asking about demo features or how the recommendations work.";
-    return "Nice question — this is a mock bot. Replace with a backend LLM or third-party bot later.\nTip: say 'how do I test CORS' to get testing steps.";
+    return "Nice question — this is a mock bot.\nTip: say hello to the developer.\nHere: https://github.com/Shobhits15";
   };
 
   return (
