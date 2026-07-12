@@ -12,6 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import com.google.genai.types.GenerateContentResponse;
+import com.google.genai.Client;
+
 
 @Service
 public class ChatService {
@@ -92,69 +95,27 @@ public class ChatService {
         return null;
     }
 
+
     private String tryGoogleReply(String message) {
+
         try {
-            RestTemplate rest = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
 
-            Map<String, Object> body = new HashMap<>();
+            Client client = Client.builder()
+                    .apiKey(googleApiKey)
+                    .build();
 
-            List<Map<String, Object>> contents = new ArrayList<>();
+            GenerateContentResponse response =
+                    client.models.generateContent(
+                            "gemini-2.5-flash",
+                            message,
+                            null
+                    );
 
-            Map<String, Object> requestContent = new HashMap<>();
+            return response.text();
 
-            List<Map<String, String>> requestParts = new ArrayList<>();
-
-            requestParts.add(Map.of(
-                    "text",
-                    message == null ? "" : message
-            ));
-
-            requestContent.put("parts", requestParts);
-
-            contents.add(requestContent);
-
-            body.put("contents", contents);
-            String url ="https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key="
-                            + googleApiKey;
-            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
-
-            ResponseEntity<String> resp = rest.postForEntity(url, entity, String.class);
-            String bodyStr = resp.getBody();
-            if (resp.getStatusCode().is2xxSuccessful() && bodyStr != null) {
-                try {
-                    com.fasterxml.jackson.databind.ObjectMapper om = new com.fasterxml.jackson.databind.ObjectMapper();
-                    Map<String, Object> parsed = om.readValue(bodyStr, Map.class);
-
-                    List<Map<String, Object>> candidates =
-                            (List<Map<String, Object>>) parsed.get("candidates");
-
-                    if (candidates != null && !candidates.isEmpty()) {
-
-                        Map<String, Object> candidate = candidates.get(0);
-
-                        Map<String, Object> content =
-                                (Map<String, Object>) candidate.get("content");
-
-                        List<Map<String, Object>> parts =
-                                (List<Map<String, Object>>) content.get("parts");
-
-                        if (parts != null && !parts.isEmpty()) {
-                            return parts.get(0).get("text").toString();
-                        }
-                    }
-                } catch (Exception ex) {
-                    return "Google parse error: " + ex.getMessage() + " — raw: " + bodyStr;
-                }
-            } else {
-                String status = resp.getStatusCode().toString();
-                String msg = (bodyStr == null || bodyStr.isEmpty()) ? "[no body]" : bodyStr;
-                return "Google Generative API error: " + status + " — " + msg + "\nCheck API key, model name, and that the Generative API is enabled in GCP.";
-            }
         } catch (Exception e) {
-            return "Google Generative API exception: " + e.getMessage();
+            return "Gemini Error: " + e.getMessage();
         }
-        return null;
+
     }
 }
