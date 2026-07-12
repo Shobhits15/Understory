@@ -2,7 +2,7 @@
 
 A complete, production-ready e-commerce platform with AI-powered product recommendations, personalized shopping experience, and comprehensive order management.
 
-**Live Demo:** https://understory-production-cec9.up.railway.app
+**Live Demo:** https://understory-nbrcnrz5j-understory3.vercel.app/)
 
 ---
 
