@@ -12,110 +12,91 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.google.genai.types.GenerateContentResponse;
-import com.google.genai.Client;
+
 
 
 @Service
 public class ChatService {
 
-    @Value("${OPENAI_API_KEY:}")
-    private String openaiApiKey;
 
-    @Value("${GOOGLE_API_KEY:}")
-    private String googleApiKey;
+    @Value("${groq.api.key}")
+    private String groqApiKey;
 
     /**
-     * Replies to a user message using either Google Generative API (if GOOGLE_API_KEY
-     * is set) or OpenAI (if OPENAI_API_KEY is set). If neither key is configured,
+     * Replies to a user message using gorq cloud . If neither key is configured,
      * returns a helpful message.
      */
     public String reply(String message) {
-        if ((googleApiKey == null || googleApiKey.isEmpty()) && (openaiApiKey == null || openaiApiKey.isEmpty())) {
-            return "No generative AI key configured on server. Set OPENAI_API_KEY or GOOGLE_API_KEY in environment to enable the chatbot.";
+
+        if (groqApiKey == null || groqApiKey.isBlank()) {
+            return "Groq API key is not configured.";
         }
 
-        // Prefer Google if available
-        if (googleApiKey != null && !googleApiKey.isEmpty()) {
-            String g = tryGoogleReply(message);
-            if (g != null) return g;
-        }
-
-        // Fallback to OpenAI
-        if (openaiApiKey != null && !openaiApiKey.isEmpty()) {
-            String o = tryOpenAIReply(message);
-            if (o != null) return o;
-        }
-
-        return "No response from generative provider";
+        return tryGroqReply(message);
     }
 
-    private String tryOpenAIReply(String message) {
+    private String tryGroqReply(String message) {
+
         try {
+
             RestTemplate rest = new RestTemplate();
+
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth(openaiApiKey);
+            headers.setBearerAuth(groqApiKey);
 
             Map<String, Object> body = new HashMap<>();
-            body.put("model", "gpt-3.5-turbo");
+
+            body.put("model", "llama-3.3-70b-versatile");
 
             List<Map<String, String>> messages = new ArrayList<>();
-            Map<String, String> userMsg = new HashMap<>();
-            userMsg.put("role", "user");
-            userMsg.put("content", message == null ? "" : message);
-            messages.add(userMsg);
+
+            Map<String, String> system = new HashMap<>();
+            system.put("role", "system");
+            system.put("content",
+                    "You are Understory AI, a helpful shopping assistant. Help customers find products, answer questions, recommend items, explain features, shipping and orders.");
+
+            messages.add(system);
+
+            Map<String, String> user = new HashMap<>();
+            user.put("role", "user");
+            user.put("content", message);
+
+            messages.add(user);
 
             body.put("messages", messages);
-            body.put("max_tokens", 300);
             body.put("temperature", 0.7);
+            body.put("max_tokens", 512);
 
-            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+            HttpEntity<Map<String, Object>> entity =
+                    new HttpEntity<>(body, headers);
 
-            ResponseEntity<Map> resp = rest.postForEntity("https://api.openai.com/v1/chat/completions", entity, Map.class);
-            if (resp.getStatusCode().is2xxSuccessful() && resp.getBody() != null) {
-                Object choicesObj = resp.getBody().get("choices");
-                if (choicesObj instanceof List) {
-                    List choices = (List) choicesObj;
-                    if (!choices.isEmpty()) {
-                        Object first = choices.get(0);
-                        if (first instanceof Map) {
-                            Object messageObj = ((Map) first).get("message");
-                            if (messageObj instanceof Map) {
-                                Object content = ((Map) messageObj).get("content");
-                                if (content != null) return content.toString().trim();
-                            }
-                        }
-                    }
+            ResponseEntity<Map> response =
+                    rest.postForEntity(
+                            "https://api.groq.com/openai/v1/chat/completions",
+                            entity,
+                            Map.class);
+
+            if (response.getBody() != null) {
+
+                List choices = (List) response.getBody().get("choices");
+
+                if (choices != null && !choices.isEmpty()) {
+
+                    Map first = (Map) choices.get(0);
+
+                    Map msg = (Map) first.get("message");
+
+                    return msg.get("content").toString().trim();
                 }
             }
-        } catch (Exception e) {
-            return "OpenAI error: " + e.getMessage();
-        }
-        return null;
-    }
 
-
-    private String tryGoogleReply(String message) {
-
-        try {
-
-            Client client = Client.builder()
-                    .apiKey(googleApiKey)
-                    .build();
-
-            GenerateContentResponse response =
-                    client.models.generateContent(
-                            "gemini-2.5-flash-lite",
-                            message,
-                            null
-                    );
-
-            return response.text();
+            return "No response from Groq.";
 
         } catch (Exception e) {
-            return "Gemini Error: " + e.getMessage();
-        }
 
+            return "Groq Error: " + e.getMessage();
+
+        }
     }
 }
