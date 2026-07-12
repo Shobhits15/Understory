@@ -116,7 +116,7 @@ public class ChatService {
             contents.add(requestContent);
 
             body.put("contents", contents);
-            String url ="https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key="
+            String url ="https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key="
                             + googleApiKey;
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
