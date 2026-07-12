@@ -99,14 +99,25 @@ public class ChatService {
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             Map<String, Object> body = new HashMap<>();
-            // Generative Language API: use prompt.text for a simple text request
-            Map<String, String> prompt = new HashMap<>();
-            prompt.put("text", message == null ? "" : message);
-            body.put("prompt", prompt);
-            body.put("maxOutputTokens", 300);
-            body.put("temperature", 0.7);
 
-            String url = "https://generativelanguage.googleapis.com/v1/models/text-bison-001:generate?key=" + googleApiKey;
+            List<Map<String, Object>> contents = new ArrayList<>();
+
+            Map<String, Object> requestContent = new HashMap<>();
+
+            List<Map<String, String>> requestParts = new ArrayList<>();
+
+            requestParts.add(Map.of(
+                    "text",
+                    message == null ? "" : message
+            ));
+
+            requestContent.put("parts", requestParts);
+
+            contents.add(requestContent);
+
+            body.put("contents", contents);
+            String url ="https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key="
+                            + googleApiKey;
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
             ResponseEntity<String> resp = rest.postForEntity(url, entity, String.class);
@@ -114,21 +125,25 @@ public class ChatService {
             if (resp.getStatusCode().is2xxSuccessful() && bodyStr != null) {
                 try {
                     com.fasterxml.jackson.databind.ObjectMapper om = new com.fasterxml.jackson.databind.ObjectMapper();
-                    Map parsed = om.readValue(bodyStr, Map.class);
-                    Object candidatesObj = parsed.get("candidates");
-                    if (candidatesObj instanceof List) {
-                        List candidates = (List) candidatesObj;
-                        if (!candidates.isEmpty()) {
-                            Object first = candidates.get(0);
-                            if (first instanceof Map) {
-                                Object content = ((Map) first).get("output");
-                                if (content == null) content = ((Map) first).get("content");
-                                if (content != null) return content.toString().trim();
-                            }
+                    Map<String, Object> parsed = om.readValue(bodyStr, Map.class);
+
+                    List<Map<String, Object>> candidates =
+                            (List<Map<String, Object>>) parsed.get("candidates");
+
+                    if (candidates != null && !candidates.isEmpty()) {
+
+                        Map<String, Object> candidate = candidates.get(0);
+
+                        Map<String, Object> content =
+                                (Map<String, Object>) candidate.get("content");
+
+                        List<Map<String, Object>> parts =
+                                (List<Map<String, Object>>) content.get("parts");
+
+                        if (parts != null && !parts.isEmpty()) {
+                            return parts.get(0).get("text").toString();
                         }
                     }
-                    Object textObj = parsed.get("text");
-                    if (textObj != null) return textObj.toString().trim();
                 } catch (Exception ex) {
                     return "Google parse error: " + ex.getMessage() + " — raw: " + bodyStr;
                 }
